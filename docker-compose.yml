@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  php:
+    build: ./services/php
+    volumes:
+      - ./source:/var/www/html
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8085:80"
+    volumes:
+      - ./source:/var/www/html
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./services/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
